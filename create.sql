@@ -3,7 +3,7 @@ create table exercise
     id serial not null,
     title CHARACTER VARYING(255) not null,
     day INTEGER not null,
-    imgUrl CHARACTER VARYING(255) not null
+    img_url CHARACTER VARYING(255) not null
 );
 
 create unique index exercise_id_uindex
@@ -16,12 +16,12 @@ alter table exercise
 create table set
 (
     id serial not null,
-    exerciseId INTEGER not null,
+    exercise_id INTEGER not null,
     rating INTEGER not null,
     repetitions INTEGER not null,
     weight INTEGER not null,
-    createadBy CHARACTER VARYING(255) not null,
-    createdAt TIMESTAMP with time zone NOT NULL DEFAULT now()
+    created_by CHARACTER VARYING(255) not null,
+    created_at TIMESTAMP with time zone NOT NULL DEFAULT now()
 );
 
 create unique index set_id_uindex
