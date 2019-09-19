@@ -43,9 +43,19 @@ const checkJwt = jwt({
 });
 app.use(checkJwt);
 
-app.get('/api/v1/exercises/:day', (req, res) => {
+app.get('/api/v1/exercises/by_day/:day', (req, res) => {
     const day = parseInt(req.params.day);
-    pool.query('SELECT id, title, imgurl FROM exercise WHERE day = $1 ORDER BY title', [day], (error, results) => {
+    pool.query('SELECT id, title, imgUrl FROM exercise WHERE day = $1 ORDER BY title', [day], (error, results) => {
+        if (error) {
+            throw error
+        }
+        res.status(200).json(results.rows)
+    });
+});
+
+app.get('/api/v1/exercises/:excerciseId', (req, res) => {
+    const excerciseId = parseInt(req.params.excerciseId);
+    pool.query('SELECT id, title, imgUrl, day FROM exercise WHERE id = $1 ORDER BY title', [excerciseId], (error, results) => {
         if (error) {
             throw error
         }
