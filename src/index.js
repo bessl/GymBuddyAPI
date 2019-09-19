@@ -9,7 +9,6 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
 
 if (dotenv.error) {
-    console.log('No .env config found!');
     throw dotenv.error
 }
 
@@ -44,19 +43,15 @@ const checkJwt = jwt({
 });
 app.use(checkJwt);
 
-app.get('/',(req, res) => {
-    res.send('Hello world');
-});
-
-app.get('/api/v1/exercises/', (req, res) => {
-    pool.query('SELECT * FROM exercise ORDER BY title', (error, results) => {
+app.get('/api/v1/exercises/:day', (req, res) => {
+    const day = parseInt(req.params.day);
+    pool.query('SELECT id, title, imgurl FROM exercise WHERE day = $1 ORDER BY title', [day], (error, results) => {
         if (error) {
             throw error
         }
         res.status(200).json(results.rows)
     });
 });
-
 
 app.listen(3001, () => {
     console.log('listening on port 3001');
