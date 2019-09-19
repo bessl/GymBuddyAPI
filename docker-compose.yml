@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  app:
+    image: node:latest
+    container_name: gb_app
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    command: npm run start
+    ports:
+      - 3023:3001
+    restart: always
+    user: ${CURRENT_UID}
+    links:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    container_name: gb_postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gymbuddy
+      PGDATA: /pg
+    ports:
+      - 5455:5432
+    volumes:
+      - ./data/postgres/:/pg/

@@ -61,3 +61,7 @@ typings/
 .next
 
 package-lock.json
+
+# project stuff
+data/postgres
+/NOTES.txt
