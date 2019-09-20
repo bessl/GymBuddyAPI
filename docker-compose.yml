@@ -12,7 +12,11 @@ services:
       - 3023:3001
     restart: always
     user: ${CURRENT_UID}
+    environment:
+      - NODE_ENV=${NODE_ENV}
     links:
+      - postgres
+    depends_on:
       - postgres
 
   postgres:
