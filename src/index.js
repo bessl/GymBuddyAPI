@@ -31,7 +31,7 @@ app.use(morgan('combined'));
 
 // just for simple testing
 app.get('/ping', (req, res) => {
-    res.status(200).send('pong\n');
+    res.status(200).json({ping: 'pong'});
 });
 
 const checkJwt = jwt({
@@ -91,8 +91,8 @@ app.post('/api/v1/sets', (req, res) => {
 });
 
 const serverPort = (environment === 'test') ? process.env.APP_PORT_TEST : process.env.APP_PORT_DEV;
-const server = app.listen(serverPort, () => {
+app.listen(serverPort, () => {
     console.log(`listening on port ${serverPort}`);
 });
 
-module.exports = server;
+module.exports = app;
