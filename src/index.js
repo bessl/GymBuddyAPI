@@ -29,6 +29,11 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
 
+// just for simple testing
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong\n');
+});
+
 const checkJwt = jwt({
     secret: jwksRsa.expressJwtSecret({
         cache: true,
