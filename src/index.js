@@ -85,7 +85,7 @@ app.post('/api/v1/sets', (req, res) => {
     })
 });
 
-const serverPort = (environment === 'test') ? process.env.DB_CONNECTION_TEST : process.env.DB_CONNECTION_DEV;
+const serverPort = (environment === 'test') ? process.env.APP_PORT_TEST : process.env.APP_PORT_DEV;
 const server = app.listen(serverPort, () => {
     console.log(`listening on port ${serverPort}`);
 });
