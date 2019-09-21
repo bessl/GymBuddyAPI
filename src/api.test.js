@@ -87,6 +87,29 @@ describe('API', function () {
                 .expect(201, done);
         });
 
+        it('Get last weight for exercise 1', (done) => {
+            request(app)
+                .get('/api/v1/exercises/1/last_weight')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(r => {
+                    expect(r.body[0].weight).equal(30);
+                })
+                .expect(200, done);
+        });
+
+        it('Return empty array for last weight for exercise 2', (done) => {
+            request(app)
+                .get('/api/v1/exercises/2/last_weight')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(r => {
+                    expect(r.body).to.be.a('array');
+                    expect(r.body).to.have.lengthOf(0);
+                })
+                .expect(200, done);
+        });
+
     });
 
 });
