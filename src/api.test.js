@@ -22,9 +22,9 @@ before(async () => {
         });
 });
 
-describe('API', function () {
+describe('API', () => {
 
-    it('Health status check', function (done) {
+    it('Health status check',  done => {
         request(app)
             .get('/ping')
             .set('Accept', 'application/json')
@@ -35,7 +35,7 @@ describe('API', function () {
                 },done);
     });
 
-    it('Return all exercises for day 1', function (done) {
+    it('Return all exercises for day 1', done => {
         request(app)
             .get('/api/v1/exercises/by_day/1')
             .set('Accept', 'application/json')
@@ -50,7 +50,7 @@ describe('API', function () {
             .expect(200, done);
     });
 
-    it('Return one exercise instance by exercise ID', function (done) {
+    it('Return one exercise instance by exercise ID',  done => {
         request(app)
             .get('/api/v1/exercises/1')
             .set('Accept', 'application/json')
@@ -82,7 +82,7 @@ describe('API', function () {
                 .expect(200, done);
         });
 
-        it('Add a set', (done) => {
+        it('Add a set', done => {
              request(app)
                 .post('/api/v1/sets')
                 .set('Accept', 'application/json')
@@ -100,7 +100,7 @@ describe('API', function () {
                 .expect(201, done);
         });
 
-        it('Get last weight for exercise 1', (done) => {
+        it('Get last weight for exercise 1', done => {
             request(app)
                 .get('/api/v1/exercises/1/last_weight')
                 .set('Accept', 'application/json')
@@ -111,7 +111,7 @@ describe('API', function () {
                 .expect(200, done);
         });
 
-        it('Return empty array for last weight for exercise 2', (done) => {
+        it('Return empty array for last weight for exercise 2', done => {
             request(app)
                 .get('/api/v1/exercises/2/last_weight')
                 .set('Accept', 'application/json')
@@ -126,4 +126,3 @@ describe('API', function () {
     });
 
 });
-
