@@ -69,6 +69,19 @@ describe('API', function () {
 
     describe('Sets', () => {
 
+        it('Get all sets for exercise 1', done => {
+            request(app)
+                .get('/api/v1/sets/by_exercise/1')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(r => {
+                    expect(r.body).to.be.a('array');
+                    expect(r.body).to.have.lengthOf(1);
+                    expect(r.body[0].weight).equal(30);
+                })
+                .expect(200, done);
+        });
+
         it('Add a set', (done) => {
              request(app)
                 .post('/api/v1/sets')
