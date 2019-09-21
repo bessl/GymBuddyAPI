@@ -1,13 +1,14 @@
 const { Pool } = require('pg');
 const request = require('supertest');
+const dotenv = require('dotenv').config();
 const app = require('./index');
 const { expect } = require('chai');
 const knex = require('knex')({
     client: 'pg',
-    connection: 'postgresql://postgres:postgres@postgres:5432/gymbuddy_test',
+    connection: process.env.DB_CONNECTION_TEST,
 });
 const pool = new Pool({
-    connectionString:  'postgresql://postgres:postgres@postgres:5432/gymbuddy'
+    connectionString: process.env.DB_CONNECTION_DEV
 });
 
 before(async () => {
