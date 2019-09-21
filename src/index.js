@@ -19,15 +19,10 @@ const pool = new Pool({
     connectionString:  (environment === 'test') ? process.env.DB_CONNECTION_TEST : process.env.DB_CONNECTION_DEV
 });
 
-pool.on('connect', () => {
-    console.log('connected to the db');
-});
-
 const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(cors());
-app.use(morgan('combined'));
 
 // just for simple testing
 app.get('/ping', (req, res) => {
@@ -48,6 +43,7 @@ const checkJwt = jwt({
 // ignore Auth header for tests
 if (environment !== 'test') {
     app.use(checkJwt);
+    app.use(morgan('combined'));
 }
 
 app.get('/api/v1/exercises/by_day/:day', (req, res) => {
