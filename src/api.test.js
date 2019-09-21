@@ -6,11 +6,11 @@ const knex = require('knex')({
     client: 'pg',
     connection: 'postgresql://postgres:postgres@postgres:5432/gymbuddy_test',
 });
+const pool = new Pool({
+    connectionString:  'postgresql://postgres:postgres@postgres:5432/gymbuddy'
+});
 
 before(async () => {
-    const pool = new Pool({
-        connectionString:  'postgresql://postgres:postgres@postgres:5432/gymbuddy'
-    });
     await pool.query('DROP DATABASE IF EXISTS gymbuddy_test');
     await pool.query('CREATE DATABASE gymbuddy_test;');
     await knex.migrate.latest()
@@ -65,6 +65,28 @@ describe('API', function () {
                 expect(r.body[0].title).to.equal('Lower back bench');
             })
             .expect(200, done);
+    });
+
+    describe('Sets', () => {
+
+        it('Add a set', (done) => {
+             request(app)
+                .post('/api/v1/sets')
+                .set('Accept', 'application/json')
+                .send({
+                    exerciseId: 1,
+                    repetitions: 15,
+                    weight: 30,
+                    rating: 1,
+                    createdBy: 'me'
+                })
+                .expect('Content-Type', /json/)
+                .expect(r => {
+                    expect(r.body.status).to.equal('success');
+                })
+                .expect(201, done);
+        });
+
     });
 
 });
