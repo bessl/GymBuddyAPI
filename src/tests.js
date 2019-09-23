@@ -108,6 +108,7 @@ describe('API', () => {
                 .expect('Content-Type', /json/)
                 .expect(r => {
                     expect(r.body[0].weight).equal(30);
+                    expect(r.body[0].repetitions).equal(10);
                 })
                 .expect(200, done);
         });
