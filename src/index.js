@@ -72,7 +72,7 @@ app.get('/api/v1/sets/by_exercise/:exerciseId', (req, res) => {
 
 app.get('/api/v1/exercises/:exerciseId/last_weight', (req, res) => {
     const exerciseId = parseInt(req.params.exerciseId);
-    pool.query('SELECT weight, repetitions FROM set WHERE exercise_id = $1 ORDER BY created_at LIMIT 1', [exerciseId], (error, results) => {
+    pool.query('SELECT weight, repetitions FROM set WHERE exercise_id = $1 ORDER BY created_at DESC LIMIT 1', [exerciseId], (error, results) => {
         if (error) { throw error; }
         res.status(200).json(results.rows);
     });
