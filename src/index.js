@@ -46,34 +46,34 @@ if (environment !== 'test') {
     app.use(morgan('combined'));
 }
 
-app.get('/api/v1/exercises/by_day/:day', (req, res) => {
+app.get('/api/v1/exercises/by_day/:day', (req, res, next ) => {
     const day = parseInt(req.params.day);
     pool.query('SELECT id, title, img_url FROM exercise WHERE day = $1 ORDER BY title', [day], (error, results) => {
-        if (error) { throw error; }
+        if (error) { next(error); }
         res.status(200).json(results.rows);
     });
 });
 
-app.get('/api/v1/exercises/:exerciseId', (req, res) => {
+app.get('/api/v1/exercises/:exerciseId', (req, res, next) => {
     const exerciseId = parseInt(req.params.exerciseId);
     pool.query('SELECT id, title, img_url, day FROM exercise WHERE id = $1 ORDER BY title', [exerciseId], (error, results) => {
-        if (error) { throw error; }
+        if (error) { next(error); }
         res.status(200).json(results.rows);
     });
 });
 
-app.get('/api/v1/sets/by_exercise/:exerciseId', (req, res) => {
+app.get('/api/v1/sets/by_exercise/:exerciseId', (req, res, next) => {
     const exerciseId = parseInt(req.params.exerciseId);
     pool.query('SELECT id, repetitions, weight, rating, created_by, created_at FROM set WHERE exercise_id = $1 ORDER BY created_at DESC LIMIT 6', [exerciseId], (error, results) => {
-        if (error) { throw error; }
+        if (error) { next(error); }
         res.status(200).json(results.rows);
     });
 });
 
-app.get('/api/v1/exercises/:exerciseId/last_weight', (req, res) => {
+app.get('/api/v1/exercises/:exerciseId/last_weight', (req, res, next) => {
     const exerciseId = parseInt(req.params.exerciseId);
     pool.query('SELECT weight, repetitions FROM set WHERE exercise_id = $1 AND rating = 1 ORDER BY created_at DESC LIMIT 1', [exerciseId], (error, results) => {
-        if (error) { throw error; }
+        if (error) { next(error); }
         res.status(200).json(results.rows);
     });
 });
@@ -81,9 +81,14 @@ app.get('/api/v1/exercises/:exerciseId/last_weight', (req, res) => {
 app.post('/api/v1/sets', (req, res) => {
     const { exerciseId, repetitions, weight, rating, createdBy } = req.body;
     pool.query('INSERT INTO set (exercise_id, repetitions, weight, rating, created_by) VALUES ($1, $2, $3, $4, $5)', [exerciseId, repetitions, weight, rating, createdBy], (error, results) => {
-        if (error) { throw error; }
+        if (error) { next(error); }
         res.status(201).json({ status: 'success', message: 'Set added.' });
     })
+});
+
+app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Server error!');
 });
 
 const serverPort = (environment === 'test') ? process.env.APP_PORT_TEST : process.env.APP_PORT_DEV;
