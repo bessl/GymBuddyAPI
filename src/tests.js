@@ -1,6 +1,5 @@
 const { Pool } = require('pg');
 const request = require('supertest');
-const dotenv = require('dotenv').config();
 const app = require('./index');
 const { expect } = require('chai');
 const knex = require('knex')({
@@ -47,6 +46,7 @@ describe('API', () => {
                 expect(r.body[0].id).to.be.a('number');
                 expect(r.body[1].title).to.be.a('string');
                 expect(r.body[2].img_url).to.be.a('string');
+                expect(r.body[2].today_train).to.be.a('boolean');
             })
             .expect(200, done);
     });

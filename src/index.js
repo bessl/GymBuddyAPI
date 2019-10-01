@@ -46,12 +46,19 @@ if (environment !== 'test') {
     app.use(morgan('combined'));
 }
 
-app.get('/api/v1/exercises/by_day/:day', (req, res, next ) => {
+app.get('/api/v1/exercises/by_day/:day', async (req, res, next) => {
     const day = parseInt(req.params.day);
-    pool.query('SELECT id, title, img_url FROM exercise WHERE day = $1 ORDER BY title', [day], (error, results) => {
-        if (error) { next(error); }
-        res.status(200).json(results.rows);
-    });
+    try {
+        let resultExercises = await pool.query('SELECT id, title, img_url FROM exercise WHERE day = $1 ORDER BY title', [day]);
+        let exercises = resultExercises.rows;
+        await Promise.all(exercises.map(async e => {
+            let resultSetToday = await pool.query('SELECT count(id) as cnt FROM set WHERE set.exercise_id = $1 AND created_at >= now()::date', [e.id]);
+            e.today_train = (resultSetToday.rows[0].cnt > 0);
+        }));
+        res.status(200).json(exercises);
+    } catch (error) {
+        next(error);
+    }
 });
 
 app.get('/api/v1/exercises/:exerciseId', (req, res, next) => {
@@ -86,7 +93,7 @@ app.post('/api/v1/sets', (req, res) => {
     })
 });
 
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     console.error(err.stack);
     res.status(500).send('Server error!');
 });
